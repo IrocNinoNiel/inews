@@ -8,7 +8,8 @@ class NewsCardHorizontal extends StatelessWidget {
       this.onTap,
       @required this.item,
       this.selected: false,
-      this.navigationToProductPage})
+      this.navigationToNewsPage,
+      this.addToFavorite})
       : super(key: key);
 
   final News news;
@@ -19,7 +20,9 @@ class NewsCardHorizontal extends StatelessWidget {
 
   final bool selected;
 
-  final Function navigationToProductPage;
+  final Function navigationToNewsPage;
+
+  final Function addToFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -29,42 +32,25 @@ class NewsCardHorizontal extends StatelessWidget {
       textStyle = textStyle.copyWith(color: Colors.lightGreenAccent[400]);
 
     return Card(
-        color: Colors.white,
-        child: ListTile(
-            onTap: navigationToProductPage,
-            title: Row(
-              children: <Widget>[
-                Container(
-                  height: 100.0,
-                  width: 70.0,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(5),
-                        topLeft: Radius.circular(5),
-                      ),
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(news.getImgLink()))),
-                ),
-                Container(
-                  height: 100,
-                  child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
-                      child: Flexible(
-                        child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            new Text(news.getTitle(),
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    color: Colors.black,
-                                    fontSize: 25))
-                          ],
-                        ),
-                      )),
-                )
-              ],
-            )));
+      color: Colors.white,
+      child: ListTile(
+        onTap: navigationToNewsPage,
+        leading: Image(
+          image: NetworkImage(news.getImgLink()),
+          fit: BoxFit.fill,
+        ),
+        title: Text(news.getTitle(),
+            maxLines: 3,
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 18)),
+        trailing: IconButton(
+          icon: news.getFavorite() ? Icon(Icons.star) : Icon(Icons.star_border),
+          onPressed: addToFavorite,
+          iconSize: 40.0,
+        ),
+      ),
+    );
   }
 }

@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 class News {
   bool _isFavorite;
   String _title,
@@ -64,5 +62,18 @@ class News {
       'publishedAt': getPublishedAt(),
       'favorite': getFavorite()
     };
+  }
+
+  factory News.fromJson(Map<String, dynamic> json) {
+    return News(
+        id: json['title'],
+        title: json['title'],
+        author: json['author'],
+        description: json['description'],
+        imglink: json['urlToImage'],
+        content: json['content'],
+        source: json['source']['name'],
+        publishedAt: json['publishedAt'],
+        isFavorite: false);
   }
 }

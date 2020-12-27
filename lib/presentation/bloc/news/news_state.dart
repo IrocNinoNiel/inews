@@ -18,6 +18,11 @@ class NewsLoaded extends NewsState {
   const NewsLoaded(this.newsHeadline);
 }
 
+class NewsFavoriteLoaded extends NewsState {
+  final List<News> newsHeadline;
+  const NewsFavoriteLoaded(this.newsHeadline);
+}
+
 class NewsError extends NewsState {
   final String message;
   const NewsError(this.message);

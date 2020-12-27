@@ -49,6 +49,7 @@ class NewsCard extends StatelessWidget {
                     Text(news.getTitle(),
                         style: Theme.of(context).textTheme.title),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(news.getPublishedAt(),
                             style: TextStyle(

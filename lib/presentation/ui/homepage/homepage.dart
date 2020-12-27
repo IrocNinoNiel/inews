@@ -3,20 +3,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practice4/data/model/news.dart';
 import 'package:practice4/presentation/bloc/news/news_bloc.dart';
 import 'package:practice4/presentation/color/Color.dart';
+import 'package:practice4/presentation/ui/global/ButtonMenu.dart';
 import 'package:practice4/presentation/ui/global/newscard.dart';
 import 'package:practice4/presentation/ui/global/newscardhorizontal.dart';
 import 'package:practice4/presentation/ui/newspage/newspage.dart';
 import 'package:practice4/presentation/ui/searchpage/searchpage.dart';
+import 'package:practice4/repository/favoriterepository.dart';
 import 'package:practice4/repository/newsrepository.dart';
 
 import 'appbarmenu.dart';
+
+class HomePageParent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => NewsBloc(NewsRepository(), FavoriteRepository())
+        ..add(GetHeadlineNews()),
+      child: MyHomePageState(),
+    );
+  }
+}
 
 class MyHomePageState extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePageState> {
-  PageController _myPage = PageController(initialPage: 0);
   int curridx = 0;
   NewsBloc newsBloc;
   @override
@@ -33,7 +45,7 @@ class _MyHomePageState extends State<MyHomePageState> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              iconBtnAppbar(Icon(Icons.home), "Home", 0, 'all'),
+              iconBtnAppbar(Icon(Icons.home), "Home", 0, 'general'),
               iconBtnAppbar(Icon(Icons.favorite), "Favorites", 1, 'favorites'),
             ],
           ),
@@ -57,6 +69,8 @@ class _MyHomePageState extends State<MyHomePageState> {
               return buildLoadingUI();
             } else if (state is NewsLoaded) {
               return buildNewsList(state.newsHeadline, context);
+            } else if (state is NewsFavoriteLoaded) {
+              return buildNewsFavoriteList(state.newsHeadline, context);
             }
 
             return buildInitialUI(context);
@@ -86,23 +100,74 @@ class _MyHomePageState extends State<MyHomePageState> {
     );
   }
 
+  Widget buildNewsFavoriteList(List<News> newsHeadline, BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+            child: newsHeadline.isEmpty
+                ? Center(child: Text("List is Empty"))
+                : _buildFavoriteList(newsHeadline, context))
+      ],
+    );
+  }
+
   Widget _buildList(List<News> newsHeadline, BuildContext context) {
-    return ListView.builder(itemBuilder: (BuildContext context, int index) {
-      if (index == newsHeadline.length) return null;
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
-        child: NewsCard(
-          news: newsHeadline[index],
-          item: newsHeadline[index],
-          navigationToNewsPage: () {
-            navigationToNewsPage(context, newsHeadline[index]);
-          },
-          addToFavorite: () {
-            addFavoriteNews(newsHeadline, newsHeadline[index]);
-          },
-        ),
-      );
-    });
+    return ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == newsHeadline.length) return null;
+
+          if (index == 0) {
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+              child: NewsCard(
+                news: newsHeadline[index],
+                item: newsHeadline[index],
+                navigationToNewsPage: () {
+                  navigationToNewsPage(context, newsHeadline[index]);
+                },
+                addToFavorite: () {
+                  addFavoriteNews(newsHeadline, newsHeadline[index]);
+                },
+              ),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+            child: NewsCardHorizontal(
+              news: newsHeadline[index],
+              item: newsHeadline[index],
+              navigationToNewsPage: () {
+                navigationToNewsPage(context, newsHeadline[index]);
+              },
+              addToFavorite: () {
+                addFavoriteNews(newsHeadline, newsHeadline[index]);
+              },
+            ),
+          );
+        });
+  }
+
+  Widget _buildFavoriteList(List<News> newsHeadline, BuildContext context) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == newsHeadline.length) return null;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 4.0),
+            child: NewsCard(
+              news: newsHeadline[index],
+              item: newsHeadline[index],
+              navigationToNewsPage: () {
+                navigationToNewsPage(context, newsHeadline[index]);
+              },
+              addToFavorite: () {
+                addFavoriteNews(newsHeadline, newsHeadline[index]);
+              },
+            ),
+          );
+        });
   }
 
   Widget upperMenu() {
@@ -113,60 +178,41 @@ class _MyHomePageState extends State<MyHomePageState> {
         // This next line does the trick.
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.red)),
-              color: Colors.white,
-              textColor: Colors.red,
-              child: Text('All'),
-              onPressed: () {
-                findTypeNews('all');
-              },
-            ),
+          ButtonMenu(
+            findTypeNews: () {
+              findTypeNews('general');
+            },
+            buttonText: 'All',
           ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.red)),
-                color: Colors.white,
-                textColor: Colors.red,
-                child: Text('Sports'),
-                onPressed: () {
-                  findTypeNews('sports');
-                }),
+          ButtonMenu(
+            findTypeNews: () {
+              findTypeNews('sports');
+            },
+            buttonText: 'Sports',
           ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.red)),
-              color: Colors.white,
-              textColor: Colors.red,
-              child: Text('Fashion'),
-              onPressed: () {
-                findTypeNews('fashion');
-              },
-            ),
+          ButtonMenu(
+            findTypeNews: () {
+              findTypeNews('health');
+            },
+            buttonText: 'Health',
           ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.red)),
-              color: Colors.white,
-              textColor: Colors.red,
-              child: Text('Philippines'),
-              onPressed: () {
-                findTypeNews('philippines');
-              },
-            ),
+          ButtonMenu(
+            findTypeNews: () {
+              findTypeNews('technology');
+            },
+            buttonText: 'Technology',
+          ),
+          ButtonMenu(
+            findTypeNews: () {
+              findTypeNews('science');
+            },
+            buttonText: 'Science',
+          ),
+          ButtonMenu(
+            findTypeNews: () {
+              findTypeNews('ph');
+            },
+            buttonText: 'PH',
           ),
         ],
       ),

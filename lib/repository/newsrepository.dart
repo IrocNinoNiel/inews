@@ -9,6 +9,8 @@ class NewsRepository extends Equatable {
 
   Future<List<dynamic>> fetchAllTypeNews(String type) =>
       newsApiProvider.getTypeNews(type);
+
+  Future<List<dynamic>> fetchPhNews() => newsApiProvider.getPhHeadline();
   @override
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();

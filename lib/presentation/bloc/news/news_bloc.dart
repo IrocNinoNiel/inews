@@ -36,18 +36,25 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
 
         yield NewsLoaded(newsHeadline);
       } catch (e) {
+        print(e);
         yield NewsError('Something is wrong');
       }
     } else if (event is GetTypeNews) {
       try {
         yield NewsLoading();
-        List<News> newsHeadline;
-        newsHeadline = await _newsRepository.fetchAllTypeNews(event.type);
+        List<News> newsTypeHeadline;
+        if (event.type == 'general') {
+          newsTypeHeadline = await _newsRepository.fetchAllHeadlineNews();
+        } else if (event.type == 'ph') {
+          newsTypeHeadline = await _newsRepository.fetchPhNews();
+        } else {
+          newsTypeHeadline = await _newsRepository.fetchAllTypeNews(event.type);
+        }
 
         List<Map<String, dynamic>> result;
         result = await _favoriteRepository.fetchAllFavoriteNews();
 
-        newsHeadline.forEach((element) {
+        newsTypeHeadline.forEach((element) {
           result.forEach((element1) {
             if (element.getId() == element1['id']) {
               element.setFavorite(true);
@@ -55,7 +62,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
           });
         });
 
-        yield NewsLoaded(newsHeadline);
+        yield NewsLoaded(newsTypeHeadline);
       } catch (e) {
         yield NewsError('Something is wrong');
       }
@@ -79,7 +86,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
               isFavorite: element['favorite'] == 0 ? false : true));
         });
 
-        yield NewsLoaded(newsFavorite);
+        yield NewsFavoriteLoaded(newsFavorite);
       } catch (e) {
         print(e);
         yield NewsError('Something is wrong');
@@ -98,13 +105,10 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
           });
         } else {
           event.news.setFavorite(!event.news.getFavorite());
-          var result = await _favoriteRepository.addFavoriteNews(event.news);
 
           event.newsList.forEach((element) {
             if (element.getId() == event.news.getId()) {
               element.setFavorite(true);
-            } else {
-              element.setFavorite(false);
             }
           });
         }

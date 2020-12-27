@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  final _dbName = 'dbsqlite2.db';
+  final _dbName = 'dbsqlitefavoritenews.db';
   final _dbVersion = 1;
 
   final tableName = 'favoriteNews';
@@ -51,12 +51,6 @@ class DatabaseHelper {
     var res = await db.insert(tableName, news.toMap());
     return res;
   }
-
-  // Future<void> updateTodo(Todo todo) async {
-  //   Database db = await instance.database;
-  //   return await db.update(tableName, todo.toMap(),
-  //       where: 'id = ?', whereArgs: [todo.getId()]);
-  // }
 
   Future<void> deleteFavoriteNews(String id) async {
     Database db = await instance.database;
