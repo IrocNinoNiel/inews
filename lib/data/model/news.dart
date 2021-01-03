@@ -66,14 +66,15 @@ class News {
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
-        id: json['title'],
-        title: json['title'],
-        author: json['author'],
-        description: json['description'],
-        imglink: json['urlToImage'],
-        content: json['content'],
-        source: json['source']['name'],
-        publishedAt: json['publishedAt'],
+        id: json['title'] ?? '',
+        title: json['title'] ?? '',
+        author: json['author'] ?? '',
+        description: json['description'] ?? '',
+        imglink: json['urlToImage'] ??
+            'https://www.ntu.ac.uk/__data/assets/image/0026/271817/Default-news.jpg',
+        content: json['content'] ?? '',
+        source: json['source']['name'] ?? '',
+        publishedAt: json['publishedAt'] ?? '',
         isFavorite: false);
   }
 }

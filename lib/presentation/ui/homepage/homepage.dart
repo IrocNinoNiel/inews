@@ -71,6 +71,8 @@ class _MyHomePageState extends State<MyHomePageState> {
               return buildNewsList(state.newsHeadline, context);
             } else if (state is NewsFavoriteLoaded) {
               return buildNewsFavoriteList(state.newsHeadline, context);
+            } else if (state is NewsError) {
+              newsBloc.add(GetFavoriteNews());
             }
 
             return buildInitialUI(context);
@@ -105,7 +107,7 @@ class _MyHomePageState extends State<MyHomePageState> {
       children: <Widget>[
         Expanded(
             child: newsHeadline.isEmpty
-                ? Center(child: Text("List is Empty"))
+                ? Center(child: Text("Favorite List is Empty"))
                 : _buildFavoriteList(newsHeadline, context))
       ],
     );
@@ -163,7 +165,7 @@ class _MyHomePageState extends State<MyHomePageState> {
                 navigationToNewsPage(context, newsHeadline[index]);
               },
               addToFavorite: () {
-                addFavoriteNews(newsHeadline, newsHeadline[index]);
+                removeFavoriteNews(newsHeadline, newsHeadline[index]);
               },
             ),
           );
@@ -263,6 +265,10 @@ class _MyHomePageState extends State<MyHomePageState> {
 
   void addFavoriteNews(List<News> newsList, News news) {
     newsBloc.add(ToggleNews(newsList: newsList, news: news));
+  }
+
+  void removeFavoriteNews(List<News> newsList, News news) {
+    newsBloc.add(ToggleNewsFavorite(newsList: newsList, news: news));
   }
 
   void navigationToSearchPage(BuildContext context) {

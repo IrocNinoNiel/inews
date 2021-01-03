@@ -33,11 +33,9 @@ class _MyNewsPageState extends State<MyNewsPageState> {
         backgroundColor: PrimaryColor,
       ),
       body: Container(
-        child: Center(
-          child: NewsCard(
-            news: news,
-            item: news,
-          ),
+        child: NewsCard(
+          news: news,
+          item: news,
         ),
       ),
     );

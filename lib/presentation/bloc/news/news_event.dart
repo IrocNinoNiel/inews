@@ -22,6 +22,12 @@ class ToggleNews extends NewsEvent {
   ToggleNews({this.news, this.newsList});
 }
 
+class ToggleNewsFavorite extends NewsEvent {
+  final List<News> newsList;
+  final News news;
+  ToggleNewsFavorite({this.news, this.newsList});
+}
+
 // class UnLikeNews extends NewsEvent {
 //   final News news;
 //   UnLikeNews({this.news});

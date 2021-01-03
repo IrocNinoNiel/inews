@@ -24,7 +24,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           yield SearchLoaded(searchNews);
         }
       } catch (e) {
-        yield SearchError(e.toString());
+        yield SearchError("Not Connected to the internet");
       }
     }
   }

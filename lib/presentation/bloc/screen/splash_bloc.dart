@@ -21,8 +21,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       try {
         List<News> dummyList;
         dummyList = await _newsRepository.fetchAllHeadlineNews();
+        print(dummyList);
         yield SplashLoaded();
       } catch (e) {
+        print(e);
         yield SplashNetworkError('You are Not Connected to the Internet');
       }
     }

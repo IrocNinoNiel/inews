@@ -48,9 +48,7 @@ class App extends StatelessWidget {
           } else if (state is SplashLoaded) {
             return HomePageParent();
           } else if (state is SplashNetworkError) {
-            return ShowErrorMessage(
-              errMsg: state.message,
-            );
+            return HomePageParent();
           }
 
           return HomePageParent();
@@ -66,9 +64,11 @@ class ShowErrorMessage extends StatelessWidget {
   const ShowErrorMessage({Key key, this.errMsg}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Center(
-      child: Text(errMsg),
-    ));
+    return Scaffold(
+      body: Container(
+          child: Center(
+        child: Text(errMsg),
+      )),
+    );
   }
 }

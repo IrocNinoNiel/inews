@@ -36,8 +36,8 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
 
         yield NewsLoaded(newsHeadline);
       } catch (e) {
-        print(e);
-        yield NewsError('Something is wrong');
+        print(e.toString());
+        yield NewsError('Something is Wrong');
       }
     } else if (event is GetTypeNews) {
       try {
@@ -64,7 +64,8 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
 
         yield NewsLoaded(newsTypeHeadline);
       } catch (e) {
-        yield NewsError('Something is wrong');
+        print(e.toString());
+        yield NewsError('Something is Wrong');
       }
     } else if (event is GetFavoriteNews) {
       try {
@@ -89,7 +90,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
         yield NewsFavoriteLoaded(newsFavorite);
       } catch (e) {
         print(e);
-        yield NewsError('Something is wrong');
+        yield NewsError('Something is Wrong');
       }
     } else if (event is ToggleNews) {
       try {
@@ -111,12 +112,31 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
               element.setFavorite(true);
             }
           });
+
+          await _favoriteRepository.addFavoriteNews(event.news);
         }
 
         yield NewsLoaded(event.newsList);
       } catch (e) {
         print(e);
-        yield NewsError('Something is wrong');
+        yield NewsError('Something is Wrong');
+      }
+    } else if (event is ToggleNewsFavorite) {
+      try {
+        yield NewsLoading();
+        if (event.news.getFavorite()) {
+          event.news.setFavorite(!event.news.getFavorite());
+          await _favoriteRepository.deleteFavoriteNews(event.news.getId());
+          event.newsList.forEach((element) {
+            if (element.getId() == event.news.getId()) {
+              event.newsList.remove(element);
+            }
+          });
+        }
+        yield NewsFavoriteLoaded(event.newsList);
+      } catch (e) {
+        print(e);
+        yield NewsError('Something is Wrong');
       }
     }
   }

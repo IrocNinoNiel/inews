@@ -100,9 +100,16 @@ class NewsApiHelper {
     if (response.statusCode == 200) {
       List<dynamic> newHeadlineFromAPI = json.decode(response.body);
       newHeadlineFromAPI.forEach((element) {
-        if (element['urlToImage'] != null) {
-          headlineNews.add(News.fromJson(element));
-        }
+        // if (element['urlToImage'] != null ||
+        //     element['title'] != null ||
+        //     element['author'] != null ||
+        //     element['description'] != null ||
+        //     element['content'] != null ||
+        //     element['source']['name'] != null ||
+        //     element['publishedAt'] != null) {
+        //   headlineNews.add(News.fromJson(element));
+        // }
+        headlineNews.add(News.fromJson(element));
       });
       return headlineNews;
     }
@@ -118,9 +125,7 @@ class NewsApiHelper {
     if (response.statusCode == 200) {
       List<dynamic> newHeadlineFromAPI = json.decode(response.body);
       newHeadlineFromAPI.forEach((element) {
-        if (element['urlToImage'] != null) {
-          searchNews.add(News.fromJson(element));
-        }
+        searchNews.add(News.fromJson(element));
       });
       return searchNews;
     }
@@ -136,9 +141,7 @@ class NewsApiHelper {
     if (response.statusCode == 200) {
       List<dynamic> newHeadlineFromAPI = json.decode(response.body);
       newHeadlineFromAPI.forEach((element) {
-        if (element['urlToImage'] != null) {
-          typeNews.add(News.fromJson(element));
-        }
+        typeNews.add(News.fromJson(element));
       });
       return typeNews;
     }
@@ -151,9 +154,7 @@ class NewsApiHelper {
     if (response.statusCode == 200) {
       List<dynamic> newHeadlineFromAPI = json.decode(response.body);
       newHeadlineFromAPI.forEach((element) {
-        if (element['urlToImage'] != null) {
-          headlineNews.add(News.fromJson(element));
-        }
+        headlineNews.add(News.fromJson(element));
       });
       return headlineNews;
     }
