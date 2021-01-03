@@ -26,10 +26,11 @@ dependencies:
   bloc: ^6.0.0
   flutter_bloc: ^6.0.0
   connectivity: ^2.0.2
- 
+  flutter_cache_manager: ^2.1.0
   http: ^0.12.0+2
   equatable: ^1.0.0
   localstorage: ^3.0.5+8
+  cached_network_image:
   sqflite:
   path:
 

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:practice4/data/model/news.dart';
 
@@ -29,7 +30,11 @@ class NewsCard extends StatelessWidget {
           children: [
             new Container(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.network(news.getImgLink())),
+                child: CachedNetworkImage(
+                  imageUrl: news.getImgLink(),
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                )),
             new Container(
               padding: const EdgeInsets.all(10.0),
               child: Column(

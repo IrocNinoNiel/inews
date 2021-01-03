@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:practice4/data/model/news.dart';
 
@@ -35,9 +36,10 @@ class NewsCardHorizontal extends StatelessWidget {
       color: Colors.white,
       child: ListTile(
         onTap: navigationToNewsPage,
-        leading: Image(
-          image: NetworkImage(news.getImgLink()),
-          fit: BoxFit.fill,
+        leading: CachedNetworkImage(
+          imageUrl: news.getImgLink(),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
         ),
         title: Text(news.getTitle(),
             maxLines: 3,
