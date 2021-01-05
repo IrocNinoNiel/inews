@@ -127,11 +127,14 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
         if (event.news.getFavorite()) {
           event.news.setFavorite(!event.news.getFavorite());
           await _favoriteRepository.deleteFavoriteNews(event.news.getId());
-          event.newsList.forEach((element) {
-            if (element.getId() == event.news.getId()) {
-              event.newsList.remove(element);
-            }
-          });
+          event.newsList
+              .removeWhere((element) => element.getId() == event.news.getId());
+
+          // event.newsList.forEach((element) {
+          //   if (element.getId() == event.news.getId()) {
+          //     event.newsList.remove(element);
+          //   }
+          // });
         }
         yield NewsFavoriteLoaded(event.newsList);
       } catch (e) {
